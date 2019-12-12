@@ -1,0 +1,51 @@
+import 'package:flutter/material.dart';
+import './models/transaction.dart';
+import './widget/trx.dart';
+
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: MyApp(),
+  ));
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  final List<Transaction> dataTrx = [
+    Transaction(nama:"sepatu", harga: 200.20, tanggal: DateTime.now()),
+    Transaction(nama:"baju", harga: 200.20, tanggal: DateTime.now()),
+    Transaction(nama:"celana", harga: 150.10, tanggal: DateTime.now().subtract(Duration(days: 3))),
+    Transaction(nama:"makanan", harga: 130.10, tanggal: DateTime.now().subtract(Duration(days: 4))),
+  ];
+
+  
+  List<Transaction> get _recentDataTrx {
+    return dataTrx.where((tx){
+        return tx.tanggal.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Menu Utama",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.cyan.shade200,
+        ),
+        body: trx(_recentDataTrx)
+        );
+
+        //backgroundColor: Colors.white,
+        
+  }
+}

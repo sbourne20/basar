@@ -1,0 +1,42 @@
+import 'package:basar/login.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: MyApp(),
+    routes: <String, WidgetBuilder>{
+        '/loginroute': (BuildContext context) => new loginRoute(),
+      },
+    
+  ));
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Menu Utama",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.cyan.shade200,
+        ),
+        body: Column(
+          children: <Widget>[
+            Text("testdddd"),
+            RaisedButton(
+              child: Text('Open route'),
+              onPressed: () {
+                Navigator.of(context).pushNamed("/loginroute");
+              },
+            )
+          ],
+        ),
+        //backgroundColor: Colors.white,
+      );
+      
+  }
+}

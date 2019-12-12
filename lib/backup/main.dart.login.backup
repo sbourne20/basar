@@ -1,0 +1,193 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+//void main() {
+/*runApp(MaterialApp(
+    title: 'Navigation Basics',
+    
+    home: MyApp(),
+  ));*/
+//}
+
+void main() => runApp(myMain());
+
+class myMain extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Basar",
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(31, 152, 109, 1),
+      ),
+      home: new MyApp(),
+    );
+  }
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String actualCode;
+  String messagex = "xxx";
+  String valuex = "";
+
+
+  Future<void> loginWithPhone() async {
+    var firebaseAuth = await FirebaseAuth.instance;
+
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      this.actualCode = verificationId;
+      //print('Code sent to phone : ' + verificationId);
+
+      setState(() {
+        messagex = 'Code sent to phone : ' + verificationId;
+      });
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {};
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {};
+
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential auth) {};
+
+    firebaseAuth.verifyPhoneNumber(
+        phoneNumber: '+628119891977',
+        timeout: Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+  }
+
+  Future _signInWithPhoneNumber() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+        verificationId: actualCode, smsCode: valuex);
+
+    //print (_authCredential.toString());
+    
+    
+
+    /*final FirebaseUser user =
+        (await _auth.signInWithCredential(_authCredential)).user;
+    //print("signed in " + user.uid);
+    setState(() {
+      messagex = "signed in " + user.uid;
+    });
+    return user;*/
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    void _dateShow() {
+      showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              lastDate: DateTime(2020),
+              firstDate: DateTime(2019))
+          .then((value) {
+        print(value.toString());
+        return (value.toString());
+      });
+    }
+
+    void onsubm(value) {
+      setState(() {
+        valuex = value;
+        print(valuex);
+      });
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Row(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            //textDirection: TextDirection.rtl,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset(
+                'images/basar_logo.png',
+                fit: BoxFit.contain,
+                height: 50,
+                alignment: Alignment.topLeft,
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+
+                //color: Colors.black,
+                alignment: Alignment(1, 0.0),
+                width: 160,
+                child: Row(
+                  children: <Widget>[
+                    Image.asset(
+                      'images/drawable-mdpi/Image7.png',
+                      fit: BoxFit.contain,
+                      height: 30,
+                      //width: 120,
+                      alignment: Alignment.centerRight,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "100.000.000",
+                      textAlign: TextAlign.end,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: Container(
+            child: Column(
+          children: <Widget>[
+            Text(messagex.isEmpty ? "isi" : messagex),
+            SizedBox(
+              height: 10,
+            ),
+            Text(valuex.isEmpty ? "isi" : valuex),
+            SizedBox(
+              height: 10,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'OTP',
+              ),
+              onSubmitted: onsubm,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            RaisedButton(
+              child: Text("Date Selection"),
+              onPressed: _dateShow,
+            ),
+            RaisedButton(
+                child: Text("Login with Phone"), onPressed: loginWithPhone),
+            RaisedButton(
+                child: Text("Login with Phone2"),
+                onPressed: _signInWithPhoneNumber),
+             RaisedButton(
+                child: Text("check phone"),
+                onPressed: (){
+                  
+                }),
+            
+          ],
+        )));
+
+    //backgroundColor: Colors.white,
+  }
+}

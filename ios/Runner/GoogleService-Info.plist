@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>600550636614-0fertbhjd9jgjk8l98cnon52gd9t65ia.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.600550636614-0fertbhjd9jgjk8l98cnon52gd9t65ia</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>600550636614-m1rr62886i0laark89133u7j5ckg0gun.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC5qJlpw5hc2ynHaeokA191IAgEfkKqEys</string>
+	<key>GCM_SENDER_ID</key>
+	<string>600550636614</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.bitclicks.basar</string>
+	<key>PROJECT_ID</key>
+	<string>basar17</string>
+	<key>STORAGE_BUCKET</key>
+	<string>basar17.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:600550636614:ios:1eb8fbd4665f0054c31e47</string>
+	<key>DATABASE_URL</key>
+	<string>https://basar17.firebaseio.com</string>
+</dict>
+</plist>

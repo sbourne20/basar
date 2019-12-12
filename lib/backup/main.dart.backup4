@@ -1,0 +1,188 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+//void main() {
+/*runApp(MaterialApp(
+    title: 'Navigation Basics',
+    
+    home: MyApp(),
+  ));*/
+//}
+
+void main() => runApp(myMain());
+
+class myMain extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "Basar",
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(31, 152, 109, 1),
+      ),
+      home: new MyApp(),
+    );
+  }
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String phoneNumber;
+  String smsCode;
+  String verificationCode;
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    void _dateShow() {
+      showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              lastDate: DateTime(2020),
+              firstDate: DateTime(2019))
+          .then((value) {
+        print(value.toString());
+        return (value.toString());
+      });
+    }
+
+    Future<void> signInAnonymous() async {
+      final authResult = await FirebaseAuth.instance.signInAnonymously();
+      print(authResult.user.uid);
+    }
+
+    signIn() {
+      FirebaseAuth.instance
+          .signInWithPhoneNumber(
+              verificationId: verificationCode, smsCode: smsCode)
+          .then(
+              (user) => Navigator.of(context).pushReplacementNamed('/homepage'))
+          .catchError((e) => print(e));
+    }
+
+    Future<bool> smsCodeDialog(BuildContext context) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Enter Code"),
+              content: TextField(
+                onChanged: (value) {
+                  this.smsCode = value;
+                },
+              ),
+              contentPadding: EdgeInsets.all(10.0),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Verify"),
+                  onPressed: () {
+                    FirebaseAuth.instance.currentUser().then((user) {
+                      if (user != null) {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed('/homepage');
+                      } else {
+                        Navigator.of(context).pop();
+                        signIn();
+                      }
+                    });
+                  },
+                )
+              ],
+            );
+          });
+    }
+
+    Future<void> _submit() async {
+      final PhoneCodeAutoRetrievalTimeout autoRetrievalTimeout =
+          (String verId) {
+        this.verificationCode = verId;
+      };
+
+      final PhoneCodeSent phoneCodeSent =
+          (String verId, [int forceCodeResend]) {
+        this.verificationCode = verId;
+        //smsCodeDialog(context).then((value) => print("Signed In"));
+      };
+
+      final PhoneVerificationCompleted phoneVerificationCompleted =
+          (FirebaseUser user) {
+        print("Success");
+      } as PhoneVerificationCompleted;
+
+      final PhoneVerificationFailed phoneVerificationFailed =
+          (AuthException exception) {
+        print("${exception.message}");
+      };
+
+      await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: '+628119891977',
+          timeout: const Duration(seconds: 5),
+          verificationCompleted: phoneVerificationCompleted,
+          verificationFailed: phoneVerificationFailed,
+          codeSent: phoneCodeSent,
+          codeAutoRetrievalTimeout: autoRetrievalTimeout);
+    }
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Row(
+            //crossAxisAlignment: CrossAxisAlignment.stretch,
+            //textDirection: TextDirection.rtl,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset(
+                'images/basar_logo.png',
+                fit: BoxFit.contain,
+                height: 50,
+                alignment: Alignment.topLeft,
+              ),
+              Image.asset(
+                'images/drawable-mdpi/Image7.png',
+                fit: BoxFit.contain,
+                height: 30,
+                alignment: Alignment.center,
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(35, 0, 0, 0),
+
+                //color: Colors.black,
+                alignment: Alignment(1, 0.0),
+                width: 150,
+                child: Text(
+                  "10.000.000",
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: Container(
+            child: Column(
+          children: <Widget>[
+            Text("test"),
+            SizedBox(
+              height: 10,
+            ),
+            RaisedButton(
+              child: Text("Date Selection"),
+              onPressed: _dateShow,
+            ),
+            RaisedButton(
+              child: Text("Login with Phone"),
+              onPressed: _submit,
+            ),
+            RaisedButton(
+              child: Text("Login with Anonymous"),
+              onPressed: signInAnonymous,
+            ),
+          ],
+        )));
+
+    //backgroundColor: Colors.white,
+  }
+}

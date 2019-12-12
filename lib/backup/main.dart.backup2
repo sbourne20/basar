@@ -1,0 +1,102 @@
+import 'package:basar/jawab.dart';
+import 'package:basar/login.dart';
+import 'package:basar/result.dart';
+import 'package:basar/tanya.dart';
+import 'package:flutter/material.dart';
+
+
+void main() {
+  runApp(MaterialApp(
+    title: 'Navigation Basics',
+    home: MyApp(),
+    routes: <String, WidgetBuilder>{
+      '/loginroute': (BuildContext context) => new loginRoute(),
+    },
+  ));
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var _tulisanIndex = 0;
+  var _totalScore = 0;
+  var tulisan1 = [
+    {
+      'tul': 'tulisan apa',
+      'jaw': [
+        {'text': 'jaw1', 'score': 10},
+        {'text': 'jaw2', 'score': 20},
+        {'text': 'jaw3', 'score': 30}
+      ],
+    },
+    {
+      'tul': 'tanya apa',
+      'jaw': [
+        {'text': 'test 1', 'score': 10},
+        {'text': 'test 2', 'score': 20},
+        {'text': 'test 3', 'score': 30}
+      ]
+    },
+    {
+      'tul': 'quiz apa',
+      'jaw': [
+        {'text': 'qz 1', 'score': 10},
+        {'text': 'qz 2', 'score': 20},
+        {'text': 'qz 3', 'score': 30}
+      ]
+    },
+  ];
+  void _gantiTulisan(int score) {
+    _totalScore = _totalScore + score;
+
+    setState(() {
+      _tulisanIndex++;
+    });
+
+    print(_totalScore);
+  }
+
+  void _restart() {
+    setState(() {
+      _tulisanIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    var tulisan = ['Tulisan 1', 'Tulisan 2', 'Tulisan 3'];
+
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Menu Utama",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.cyan.shade200,
+        ),
+        body: _tulisanIndex < tulisan1.length
+            ? Column(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    //child: Text(tulisan[_tulisanIndex]),
+                    child: Text(tulisan1[_tulisanIndex]["tul"]),
+                  ),
+                  ...(tulisan1[_tulisanIndex]["jaw"]
+                          as List<Map<String, Object>>)
+                      .map((tulis) {
+                    return jawab(
+                        () => _gantiTulisan(tulis["score"]), tulis['text']);
+                  }).toList()
+                ],
+              )
+            : result(_totalScore, _restart)
+        //backgroundColor: Colors.white,
+        );
+  }
+}

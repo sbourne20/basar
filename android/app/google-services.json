@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "600550636614",
+    "firebase_url": "https://basar17.firebaseio.com",
+    "project_id": "basar17",
+    "storage_bucket": "basar17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600550636614:android:b425850c1f7e9ba5c31e47",
+        "android_client_info": {
+          "package_name": "com.bitclicks.basar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600550636614-p81d1c00m3qdohffjtqnshe5lajvlreg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeuzcGX5E_ezdPYE5Ma3yIm4AZqMsChgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600550636614-p81d1c00m3qdohffjtqnshe5lajvlreg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

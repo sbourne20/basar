@@ -1,0 +1,161 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+class LoginPage1 extends StatefulWidget {
+  LoginPage1({@required this.onSignIn});
+  final Function (FirebaseUser) onSignIn;
+  
+  @override
+  _LoginPage1State createState() => _LoginPage1State();
+}
+
+
+
+class _LoginPage1State extends State<LoginPage1> {
+  String _valueHP = "";
+  String _valueOTP = "";
+  String _actualCode;
+  String _textButton = "Selanjutnya >>";
+  String _labelText = "No Handphone";
+  
+  final TextEditingController _textController = new TextEditingController();
+
+  Widget PrefixOnTextbox(){
+    return _valueHP.isEmpty ? Text("+62", style: TextStyle(color: Colors.white)) : null;    
+  }
+
+  void _valueHpOtp(value) {
+    _valueHP == "" ? _valueHP = value : _valueOTP = value;
+  }
+
+  Future<void> _returnOTPPhone() async {
+    
+    var firebaseAuth = FirebaseAuth.instance;    
+
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      this._actualCode = verificationId;
+    };
+
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {};
+
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {};
+
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential auth) {};
+
+    await firebaseAuth.verifyPhoneNumber(
+        phoneNumber: _valueHP,
+        timeout: Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+
+    setState(() {
+      _textButton = "Masuk >>";
+      _labelText = "Masukan OTP dari SMS anda";
+    });
+  }
+
+  Future _signInWithPhoneNumber() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+        verificationId: _actualCode, smsCode: _valueOTP);
+
+    try {
+      final FirebaseUser _user =
+          (await _auth.signInWithCredential(_authCredential)).user;
+      print("signed in " + _user.uid);
+      
+
+    } catch (e) {
+      print("error sign in : " + e.toString());
+    }
+  }
+
+  void _selanjutnyaButton() {
+    setState(() {
+      if (_valueOTP == "") {
+        _valueHP = '+62' + _valueHP;
+        _returnOTPPhone();
+      } else {        
+        _signInWithPhoneNumber();
+      }
+
+      _textController.clear();
+
+      print("nohp: " + _valueHP);
+      print("nootp: " + _valueOTP);
+      FocusScope.of(context).unfocus();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Container(
+            color: Theme.of(context).primaryColor,
+            child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Image.asset(
+                    'images/basar2.png',
+                    fit: BoxFit.fitWidth,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                      child: Text(
+                    "Masuk",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  //SizedBox(width: 350, child: textHpOTP()),
+                  SizedBox(
+                      width: 350,
+                      child: TextField(
+                        keyboardType: TextInputType.phone,
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        controller: _textController,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.white, width: 1.0)),
+                          labelStyle: TextStyle(color: Colors.white),
+                          labelText: _labelText,
+                          prefix: PrefixOnTextbox(),
+                        ),
+                        onSubmitted: _valueHpOtp,
+                      )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  RaisedButton(
+                    child: Text(_textButton),
+                    color: Theme.of(context).buttonColor,
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: _selanjutnyaButton,
+                  ),
+                ],
+              ),
+            )));
+  }
+}
